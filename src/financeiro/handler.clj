@@ -19,7 +19,12 @@
                                     (-> (db/registrar (:body requisicao))
                                         (como-json 201))
                                     (como-json {:mensagem "Requisicao inválida"} 422)))
-
+  (GET "/transacoes" {filtros :params} [] (como-json {:transacoes 
+                                                        (if (empty? filtros)
+                                                          (db/transacoes)
+                                                          (db/transacoes-com-filtro filtros))}))
+  (GET "/receitas" [] (como-json {:transacoes (db/transacoes-do-tipo "receita")}))
+  (GET "/despesas" [] (como-json {:transacoes (db/transacoes-do-tipo "despesa")}))
   (route/not-found "Recurso não encontrado"))
 
 (def app
